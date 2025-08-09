@@ -40,6 +40,8 @@
 - ✅ 支持流式和非流式响应
 - ✅ 自动语言检测和指定源语言翻译
 - ✅ CORS支持，可直接从浏览器调用
+- ✅ 可选的API密钥保护
+- ✅ 可配置的CORS源限制
 - ✅ 无服务器架构，自动扩缩容
 - ✅ 全球CDN加速
 
@@ -189,10 +191,51 @@ translateText('Hello World', 'ZH').then(console.log);
 
 ## 环境变量说明
 
-| 变量名 | 说明 | 默认值 |
-|--------|------|--------|
-| `TRANSLATION_API_KEY` | DeepLX API密钥 | 空 |
-| `TRANSLATION_API_URL` | DeepLX API地址 | `https://api.deeplx.org/translate` |
+| 变量名 | 说明 | 默认值 | 必需 |
+|--------|------|--------|------|
+| `TRANSLATION_API_KEY` | DeepLX API密钥 | 空 | ❌ |
+| `TRANSLATION_API_URL` | DeepLX API地址 | `https://api.deeplx.org/translate` | ❌ |
+| `API_KEY_PROTECTION` | API保护密钥 | 空 | ❌ |
+| `ALLOWED_ORIGINS` | 允许的CORS源 | `*` | ❌ |
+
+### 🔐 API密钥保护
+
+设置 `API_KEY_PROTECTION` 环境变量可以保护你的翻译API，防止未授权访问：
+
+```bash
+# 设置保护密钥
+wrangler secret put API_KEY_PROTECTION
+# 输入你的密钥，例如: sk-your-secret-key-here
+```
+
+客户端调用时需要提供密钥：
+
+```bash
+# 方式1: 使用Authorization头
+curl -X POST "https://your-worker.workers.dev/v1/chat/completions" \
+  -H "Authorization: Bearer sk-your-secret-key-here" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepl-ZH","messages":[{"role":"user","content":"Hello"}]}'
+
+# 方式2: 使用X-API-Key头
+curl -X POST "https://your-worker.workers.dev/v1/chat/completions" \
+  -H "X-API-Key: sk-your-secret-key-here" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"deepl-ZH","messages":[{"role":"user","content":"Hello"}]}'
+```
+
+### 🌐 CORS源限制
+
+设置 `ALLOWED_ORIGINS` 环境变量可以限制哪些域名可以访问你的API：
+
+```bash
+# 设置允许的源（多个用逗号分隔）
+wrangler secret put ALLOWED_ORIGINS
+# 输入: https://yourdomain.com,https://app.yourdomain.com
+
+# 支持通配符
+# 输入: https://*.yourdomain.com,http://localhost:*
+```
 
 ## 错误处理
 

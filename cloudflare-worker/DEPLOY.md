@@ -81,6 +81,33 @@ wrangler deploy
 |--------|------|--------|------|
 | `TRANSLATION_API_KEY` | DeepLX API密钥 | 空 | ❌ |
 | `TRANSLATION_API_URL` | DeepLX API地址 | `https://api.deeplx.org/translate` | ❌ |
+| `API_KEY_PROTECTION` | API保护密钥 | 空 | ❌ |
+| `ALLOWED_ORIGINS` | 允许的CORS源 | `*` | ❌ |
+
+### 🔐 安全配置 (推荐)
+
+为了保护你的翻译API，强烈建议配置安全选项：
+
+#### 1. 设置API密钥保护
+
+```bash
+# 生成强密钥
+openssl rand -base64 32
+
+# 设置保护密钥
+wrangler secret put API_KEY_PROTECTION
+# 输入: sk-your-generated-key-here
+```
+
+#### 2. 限制CORS源
+
+```bash
+# 设置允许的域名
+wrangler secret put ALLOWED_ORIGINS
+# 输入: https://yourdomain.com,https://app.yourdomain.com
+```
+
+详细安全配置请参考 [SECURITY.md](SECURITY.md)
 
 #### 在Cloudflare中设置环境变量
 
