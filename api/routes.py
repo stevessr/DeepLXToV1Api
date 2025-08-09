@@ -3,15 +3,25 @@ import uuid
 import time
 import json
 import aiohttp
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse, JSONResponse
 from models.schemas import ChatRequest
 from core.translation import translate_single
+from core.security import security_middleware, get_cors_headers
 
 router = APIRouter()
 
+@router.options("/v1/chat/completions")
+async def handle_options(request: Request):
+    """处理CORS预检请求"""
+    cors_headers = get_cors_headers(request)
+    return JSONResponse(content={}, headers=cors_headers)
+
 @router.post("/v1/chat/completions")
-async def translate_request(chat_request: ChatRequest):
+async def translate_request(chat_request: ChatRequest, request: Request):
+    # 安全验证
+    security_middleware(request)
+
     logging.info(f"Received request for model: {chat_request.model}")
 
     model_parts = chat_request.model.split('-')
@@ -26,7 +36,12 @@ async def translate_request(chat_request: ChatRequest):
     else:
         msg = "Invalid model format. Use 'deepl-TARGET' for auto-detection or 'deepl-SOURCE-TARGET'."
         logging.error(msg)
-        return JSONResponse(status_code=400, content={"error": msg})
+        cors_headers = get_cors_headers(request)
+        return JSONResponse(
+            status_code=400,
+            content={"error": msg},
+            headers=cors_headers
+        )
 
     text_to_translate = ""
     for message in chat_request.messages:
@@ -57,7 +72,12 @@ async def translate_request(chat_request: ChatRequest):
     if not text_to_translate:
         msg = "No text to translate found in user message."
         logging.warning(msg)
-        return JSONResponse(status_code=400, content={"error": msg})
+        cors_headers = get_cors_headers(request)
+        return JSONResponse(
+            status_code=400,
+            content={"error": msg},
+            headers=cors_headers
+        )
 
     logging.info(f"Translating text: '{text_to_translate[:100]}...'")
 
@@ -83,11 +103,16 @@ async def translate_request(chat_request: ChatRequest):
             finally:
                 yield "data: [DONE]\n\n"
         
-        return StreamingResponse(sse_translate(), media_type="text/event-stream")
+        cors_headers = get_cors_headers(request)
+        return StreamingResponse(
+            sse_translate(),
+            media_type="text/event-stream",
+            headers=cors_headers
+        )
     else:
         try:
             translated_text = await perform_translation()
-            
+
             response_data = {
                 "id": "chatcmpl-" + str(uuid.uuid4()),
                 "object": "chat.completion",
@@ -96,6 +121,12 @@ async def translate_request(chat_request: ChatRequest):
                 "choices": [{"index": 0, "message": {"role": "assistant", "content": translated_text}, "finish_reason": "stop"}],
                 "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
             }
-            return JSONResponse(content=response_data)
+            cors_headers = get_cors_headers(request)
+            return JSONResponse(content=response_data, headers=cors_headers)
         except HTTPException as e:
-            return JSONResponse(status_code=e.status_code, content={"error": e.detail})
+            cors_headers = get_cors_headers(request)
+            return JSONResponse(
+                status_code=e.status_code,
+                content={"error": e.detail},
+                headers=cors_headers
+            )

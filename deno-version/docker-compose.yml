@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  deeplx-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - TRANSLATION_API_URL=https://api.deeplx.org/translate
+      # - TRANSLATION_API_KEY=your-deeplx-api-key
+      # - API_KEY_PROTECTION=sk-your-secret-key
+      # - ALLOWED_ORIGINS=https://yourdomain.com,https://app.yourdomain.com
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "deno", "eval", "fetch('http://localhost:8000/health').then(r => r.ok ? Deno.exit(0) : Deno.exit(1)).catch(() => Deno.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.deeplx-api.rule=Host(`api.yourdomain.com`)"
+      - "traefik.http.routers.deeplx-api.tls=true"
+      - "traefik.http.routers.deeplx-api.tls.certresolver=letsencrypt"

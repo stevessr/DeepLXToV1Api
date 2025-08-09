@@ -1,0 +1,42 @@
+{
+  "name": "deeplx-to-v1-api",
+  "version": "1.0.0",
+  "description": "DeepLX to OpenAI API - Deno版本",
+  "exports": "./main.ts",
+  "tasks": {
+    "start": "deno run --allow-net --allow-env main.ts",
+    "dev": "deno run --allow-net --allow-env --watch main.ts",
+    "check": "deno check main.ts",
+    "fmt": "deno fmt",
+    "lint": "deno lint",
+    "test": "deno test --allow-net --allow-env"
+  },
+  "imports": {
+    "@std/http": "https://deno.land/std@0.208.0/http/mod.ts",
+    "@std/assert": "https://deno.land/std@0.208.0/assert/mod.ts"
+  },
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": ["deno.window"],
+    "strict": true
+  },
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 100,
+    "indentWidth": 2,
+    "semiColons": true,
+    "singleQuote": false,
+    "proseWrap": "preserve",
+    "include": ["src/"],
+    "exclude": ["node_modules/", "dist/"]
+  },
+  "lint": {
+    "include": ["src/"],
+    "exclude": ["node_modules/", "dist/"],
+    "rules": {
+      "tags": ["recommended"],
+      "include": ["ban-untagged-todo"],
+      "exclude": ["no-unused-vars"]
+    }
+  }
+}

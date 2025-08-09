@@ -5,6 +5,8 @@ services:
     ports:
       - "38888:8000"
     environment:
-      - TRANSLATION_API_URL=https://api.deeplx.org/translate
+      - TRANSLATION_API_KEY=your-deeplx-api-key
+      # - API_KEY_PROTECTION=your-api-protection-key  # 可选：API密钥保护
+      # - ALLOWED_ORIGINS=https://yourdomain.com,https://app.yourdomain.com  # 可选：CORS源限制
     # volumes:
     #   - ./main.py:/app/main.py

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import requests
 import json
+import os
 
 def test_translation():
     url = "http://127.0.0.1:8000/v1/chat/completions"
@@ -24,6 +25,11 @@ def test_translation():
     headers = {
         "Content-Type": "application/json"
     }
+
+    # 如果设置了API保护密钥，添加到请求头
+    api_key = os.environ.get("API_KEY_PROTECTION")
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
     
     try:
         response = requests.post(url, json=payload, headers=headers, timeout=10)
