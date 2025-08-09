@@ -1,0 +1,53 @@
+{
+  "name": "DeepLX to OpenAI API",
+  "description": "将DeepL翻译服务包装成OpenAI Chat Completions API格式",
+  "repository": "https://github.com/your-username/DeepLXToV1Api",
+  "demo": "https://deeplx-api-demo.workers.dev",
+  "tags": ["translation", "openai", "deeplx", "api", "chatgpt"],
+  "categories": ["API", "AI/ML", "Productivity"],
+  "author": {
+    "name": "Your Name",
+    "url": "https://github.com/your-username"
+  },
+  "license": "MIT",
+  "worker": {
+    "name": "deeplx-to-v1-api",
+    "script": "worker.js",
+    "compatibility_date": "2023-12-01"
+  },
+  "env_vars": {
+    "TRANSLATION_API_KEY": {
+      "type": "secret",
+      "description": "DeepLX API密钥（可选，留空使用免费服务）",
+      "default": "",
+      "required": false
+    },
+    "TRANSLATION_API_URL": {
+      "type": "secret",
+      "description": "DeepLX API地址（可选，默认: https://api.deeplx.org/translate）",
+      "default": "https://api.deeplx.org/translate",
+      "required": false
+    }
+  },
+  "preview": {
+    "commands": [
+      "curl -X POST 'https://{{worker_url}}/v1/chat/completions' -H 'Content-Type: application/json' -d '{\"model\":\"deepl-ZH\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello World\"}]}'"
+    ]
+  },
+  "setup": {
+    "steps": [
+      {
+        "title": "配置API密钥",
+        "description": "（可选）在环境变量中设置你的DeepLX API密钥以获得更好的服务质量"
+      },
+      {
+        "title": "测试API",
+        "description": "使用提供的curl命令或test.html文件测试你的翻译API"
+      },
+      {
+        "title": "集成应用",
+        "description": "将Worker URL集成到你的应用中，支持OpenAI Chat Completions API格式"
+      }
+    ]
+  }
+}

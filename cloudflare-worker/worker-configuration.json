@@ -1,0 +1,43 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-types/main/worker-configuration.schema.json",
+  "name": "deeplx-to-v1-api",
+  "main": "worker.js",
+  "compatibility_date": "2023-12-01",
+  "compatibility_flags": [],
+  "send_email": [],
+  "triggers": {
+    "crons": []
+  },
+  "usage_model": "standard",
+  "env": {
+    "production": {
+      "name": "deeplx-to-v1-api",
+      "vars": {},
+      "secrets": [
+        {
+          "name": "TRANSLATION_API_KEY",
+          "value": ""
+        },
+        {
+          "name": "TRANSLATION_API_URL", 
+          "value": ""
+        }
+      ],
+      "kv_namespaces": [],
+      "durable_objects": {
+        "bindings": []
+      },
+      "r2_buckets": [],
+      "services": [],
+      "analytics_engine_datasets": []
+    }
+  },
+  "site": {
+    "bucket": ""
+  },
+  "dev": {
+    "ip": "localhost",
+    "port": 8787,
+    "local_protocol": "http"
+  }
+}

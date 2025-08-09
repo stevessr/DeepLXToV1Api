@@ -1,0 +1,23 @@
+name = "deeplx-to-v1-api"
+main = "worker.js"
+# 如果使用TypeScript版本，请改为: main = "worker.ts"
+compatibility_date = "2023-12-01"
+
+# 环境变量配置
+[env.production.vars]
+# 在Cloudflare Dashboard中设置这些环境变量，或者在这里设置默认值
+# TRANSLATION_API_KEY = "your-deeplx-api-key"
+# TRANSLATION_API_URL = "https://api.deeplx.org/your-key/translate"
+
+[env.staging.vars]
+# 测试环境配置
+# TRANSLATION_API_KEY = "your-test-api-key"
+# TRANSLATION_API_URL = "https://api.deeplx.org/your-test-key/translate"
+
+# 路由配置
+[[routes]]
+pattern = "your-domain.com/*"
+zone_name = "your-domain.com"
+
+# 或者使用workers.dev子域名
+# route = "your-worker-name.your-subdomain.workers.dev/*"

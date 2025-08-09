@@ -1,0 +1,34 @@
+{
+  "name": "deeplx-to-v1-api-worker",
+  "version": "1.0.0",
+  "description": "DeepLX to OpenAI API - Cloudflare Worker版本",
+  "main": "worker.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:staging": "wrangler deploy --env staging",
+    "tail": "wrangler tail",
+    "test": "wrangler dev --local"
+  },
+  "keywords": [
+    "cloudflare",
+    "worker",
+    "deeplx",
+    "openai",
+    "translation",
+    "api"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/deeplx-to-v1-api-worker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/deeplx-to-v1-api-worker/issues"
+  },
+  "homepage": "https://github.com/your-username/deeplx-to-v1-api-worker#readme"
+}

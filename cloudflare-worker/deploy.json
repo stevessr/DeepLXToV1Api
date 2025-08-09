@@ -1,0 +1,23 @@
+{
+  "name": "DeepLX to OpenAI API",
+  "description": "将DeepL翻译服务包装成OpenAI Chat Completions API格式的Cloudflare Worker",
+  "repository": "https://github.com/your-username/DeepLXToV1Api",
+  "main": "cloudflare-worker/worker.js",
+  "compatibility_date": "2023-12-01",
+  "env": {
+    "TRANSLATION_API_KEY": {
+      "type": "secret",
+      "description": "DeepLX API密钥（可选，留空使用免费服务）"
+    },
+    "TRANSLATION_API_URL": {
+      "type": "secret", 
+      "description": "DeepLX API地址（可选，默认使用 https://api.deeplx.org/translate）"
+    }
+  },
+  "routes": [
+    {
+      "pattern": "*.workers.dev/*",
+      "zone_name": ""
+    }
+  ]
+}
